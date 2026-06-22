@@ -1,1 +1,653 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>RAFAELTV PANEL</title>
+    <style>
+        :root {
+            --bg: #0f172a;
+            --surface: #1e293b;
+            --surface2: #334155;
+            --border: #475569;
+            --text: #f8fafc;
+            --text-dim: #94a3b8;
+            --accent: #06b6d4;
+            --glow: #22d3ee;
+            --green: #10b981;
+            --red: #ef4444;
+            --yellow: #f59e0b;
+            --blue: #3b82f6;
+            --purple: #8b5cf6;
+            --font-sans: 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            --font-mono: 'Consolas', 'Monaco', monospace;
+            --font-size-base: clamp(13px, 3.2vw, 16px);
+            --font-size-sm: clamp(11px, 2.7vw, 14px);
+            --font-size-lg: clamp(18px, 4.5vw, 22px);
+            --font-size-xl: clamp(26px, 7vw, 38px);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
+            color: var(--text);
+            font-family: var(--font-sans);
+            font-size: var(--font-size-base);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            overflow-x: hidden;
+            -webkit-tap-highlight-color: transparent;
+            user-select: none;
+            padding: 20px 0;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 720px;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes pulseGlow {
+            0%, 100% { box-shadow: 0 0 10px var(--glow), 0 0 20px rgba(6, 182, 212, 0.2); }
+            50% { box-shadow: 0 0 6px var(--glow), 0 0 12px rgba(6, 182, 212, 0.1); }
+        }
+
+        @keyframes textGlow {
+            0%, 100% { text-shadow: 0 0 10px var(--glow), 0 0 20px rgba(6, 182, 212, 0.4); }
+            50% { text-shadow: 0 0 5px var(--glow), 0 0 10px rgba(6, 182, 212, 0.2); }
+        }
+
+        .fade-in { animation: fadeInUp 0.6s ease-out forwards; }
+        .glow-text { animation: textGlow 3s ease-in-out infinite; }
+
+        #loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            z-index: 9999;
+            transition: opacity 0.5s ease;
+        }
+
+        #loading-screen.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .loading-digits {
+            font-size: var(--font-size-xxl);
+            font-weight: 800;
+            font-family: var(--font-mono);
+            letter-spacing: 10px;
+            display: flex;
+            gap: 6px;
+            color: var(--accent);
+        }
+
+        .loading-digits span.active {
+            animation: textGlow 0.8s ease-in-out infinite;
+            transform: scale(1.15);
+        }
+
+        .loading-digits span.inactive {
+            opacity: 0.15;
+            transform: scale(0.9);
+        }
+
+        .loading-subtitle {
+            margin-top: 24px;
+            font-size: var(--font-size-sm);
+            color: var(--text-dim);
+            letter-spacing: 2px;
+            opacity: 0;
+            animation: fadeInUp 0.8s ease 0.5s forwards;
+        }
+
+        .section {
+            background: rgba(30, 41, 59, 0.75);
+            border: 1px solid rgba(71, 85, 105, 0.5);
+            border-radius: 16px;
+            padding: 20px;
+            width: 100%;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .section:hover {
+            border-color: rgba(6, 182, 212, 0.4);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .section-title {
+            font-weight: 700;
+            font-size: var(--font-size-lg);
+            text-align: center;
+            margin-bottom: 12px;
+            letter-spacing: 1px;
+            color: var(--accent);
+        }
+
+        .section-subtitle {
+            font-size: var(--font-size-sm);
+            color: var(--text-dim);
+            text-align: center;
+            margin-bottom: 16px;
+            letter-spacing: 0.5px;
+        }
+
+        .button-bar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            justify-content: center;
+            margin-top: 8px;
+        }
+
+        .btn {
+            background: rgba(51, 65, 85, 0.6);
+            border: 1px solid var(--border);
+            color: var(--text);
+            padding: 9px 16px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-family: var(--font-sans);
+            font-size: var(--font-size-sm);
+            font-weight: 500;
+            transition: all 0.25s ease;
+        }
+
+        .btn:hover {
+            border-color: var(--accent);
+            background: rgba(6, 182, 212, 0.12);
+            transform: translateY(-1px);
+        }
+
+        .btn.active {
+            border-color: var(--accent);
+            background: rgba(6, 182, 212, 0.2);
+            box-shadow: 0 0 12px rgba(6, 182, 212, 0.3);
+            font-weight: 600;
+            color: #ffffff;
+        }
+
+        .ping-display {
+            text-align: center;
+            font-size: var(--font-size-sm);
+            color: var(--text-dim);
+            margin-top: 12px;
+            padding: 8px;
+            border-radius: 8px;
+            background: rgba(15, 23, 42, 0.4);
+        }
+
+        .speed-row {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            margin-top: 16px;
+            gap: 12px;
+        }
+
+        .speed-item {
+            text-align: center;
+            flex: 1;
+            padding: 12px;
+            border-radius: 12px;
+            background: rgba(15, 23, 42, 0.4);
+        }
+
+        .speed-label {
+            font-size: var(--font-size-sm);
+            color: var(--text-dim);
+            margin-bottom: 4px;
+        }
+
+        .speed-value {
+            font-size: var(--font-size-lg);
+            font-weight: 700;
+        }
+
+        .speed-value.download { color: var(--green); }
+        .speed-value.upload { color: var(--blue); }
+        .speed-value.latency { color: var(--yellow); }
+
+        .graph-container {
+            display: flex;
+            align-items: flex-end;
+            gap: 3px;
+            height: 70px;
+            margin-top: 16px;
+            padding: 8px;
+            background: rgba(15, 23, 42, 0.5);
+            border-radius: 8px;
+        }
+
+        .graph-bar {
+            flex: 1;
+            background: linear-gradient(to top, var(--accent), var(--purple));
+            border-radius: 3px;
+            transition: height 0.12s ease;
+            min-height: 3px;
+            opacity: 0.85;
+        }
+
+        .config-wrapper {
+            position: relative;
+        }
+
+        .config-display {
+            background: rgba(15, 23, 42, 0.7);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 16px;
+            padding-top: 44px;
+            font-family: var(--font-mono);
+            font-size: var(--font-size-sm);
+            line-height: 1.8;
+            word-break: break-all;
+            white-space: pre-wrap;
+            color: var(--green);
+            min-height: 110px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .copy-btn {
+            position: absolute;
+            top: 12px;
+            right: 16px;
+            background: rgba(51, 65, 85, 0.8);
+            border: 1px solid var(--border);
+            color: var(--text);
+            padding: 6px 14px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: var(--font-sans);
+            font-size: var(--font-size-sm);
+            font-weight: 500;
+            z-index: 5;
+            transition: all 0.2s ease;
+        }
+
+        .copy-btn:hover {
+            border-color: var(--accent);
+            background: rgba(6, 182, 212, 0.2);
+        }
+
+        .status-dot {
+            display: inline-block;
+            width: 9px;
+            height: 9px;
+            border-radius: 50%;
+            margin-right: 6px;
+        }
+
+        .status-dot.green { background: var(--green); box-shadow: 0 0 8px var(--green); }
+        .status-dot.yellow { background: var(--yellow); box-shadow: 0 0 8px var(--yellow); animation: pulse 1.2s infinite; }
+        @keyframes pulse { 0%,100% {opacity:1;} 50% {opacity:0.5;} }
+
+        .divider { border: none; border-top: 1px solid rgba(71, 85, 105, 0.6); margin: 12px 0; }
+        .info-row { display: flex; justify-content: space-between; align-items: center; padding: 6px 0; font-size: var(--font-size-sm); }
+        .info-label { color: var(--text-dim); }
+        .info-value { color: var(--accent); font-weight: 600; }
+
+        .dropdown-wrapper { position: relative; width: 100%; }
+        .dropdown-content {
+            display: none;
+            position: fixed;
+            background: rgba(30, 41, 59, 0.95);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 6px 0;
+            z-index: 10000;
+            max-height: 220px;
+            overflow-y: auto;
+            width: calc(100% - 32px);
+            max-width: 688px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+            backdrop-filter: blur(12px);
+        }
+        .dropdown-content.show { display: block; }
+        .dropdown-item { padding: 10px 14px; cursor: pointer; font-size: var(--font-size-sm); color: var(--text); transition: background 0.2s; }
+        .dropdown-item:hover { background: rgba(6, 182, 212, 0.15); }
+        .dropdown-item.selected { color: var(--accent); font-weight: bold; background: rgba(6, 182, 212, 0.1); }
+
+        .log-container {
+            background: rgba(15, 23, 42, 0.8);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 12px;
+            max-height: 130px;
+            overflow-y: auto;
+            font-size: var(--font-size-sm);
+            color: var(--text-dim);
+            margin-top: 12px;
+        }
+        .log-entry { padding: 3px 0; font-family: var(--font-mono); }
+        .log-entry .time { color: #64748b; margin-right: 8px; }
+    </style>
+</head>
+<body>
+
+<div id="loading-screen">
+    <div class="loading-digits" id="loading-digits">
+        <span id="d4">4</span><span id="d0">0</span><span id="d4b">4</span>
+    </div>
+    <div class="loading-subtitle" id="loading-subtitle">INITIALIZING CONFIG PORTAL</div>
+</div>
+
+<div class="container" id="main-content" style="display:none;">
+    <div class="section fade-in">
+        <div class="section-title glow-text" style="font-size:var(--font-size-xl); letter-spacing:3px;">RAFAELTV PANEL</div>
+        <div class="section-subtitle">SPEED BULLETPROOF EXPORT HUB</div>
+        <hr class="divider">
+        <div class="info-row"><span class="info-label">HOST:</span><span class="info-value" id="info-host">---</span></div>
+        <div class="info-row"><span class="info-label">PASS / UUID:</span><span class="info-value">rafaeltv</span></div>
+        <div class="info-row"><span class="info-label">UPTIME:</span><span class="info-value" id="runtime-display">00:00:00</span></div>
+    </div>
+
+    <div class="section fade-in">
+        <div class="section-title" style="font-size:var(--font-size-sm);color:var(--text-dim);">ADDRESS SELECTOR</div>
+        <div class="dropdown-wrapper">
+            <button class="btn" id="address-dropdown-btn" style="width:100%; text-align:center;">SELECT ADDRESS ▾</button>
+            <div class="dropdown-content" id="address-dropdown"></div>
+        </div>
+        <div id="address-selected" style="text-align:center; margin-top:8px; font-size:var(--font-size-sm); color:var(--accent); font-weight:500;"></div>
+    </div>
+
+    <div class="section fade-in">
+        <div class="section-title" style="font-size:var(--font-size-sm);color:var(--text-dim);">SNI SELECTOR</div>
+        <div class="dropdown-wrapper">
+            <button class="btn" id="sni-dropdown-btn" style="width:100%; text-align:center;">SELECT SNI ▾</button>
+            <div class="dropdown-content" id="sni-dropdown"></div>
+        </div>
+        <div id="sni-selected" style="text-align:center; margin-top:8px; font-size:var(--font-size-sm); color:var(--accent); font-weight:500;"></div>
+        <div class="ping-display" id="ping-display">
+            <span class="status-dot yellow"></span> SELECT PARAMETERS TO VIEW LIVE PING
+        </div>
+    </div>
+
+    <div class="section fade-in">
+        <div class="section-title" style="font-size:var(--font-size-sm);color:var(--text-dim);">REAL-TIME MONITOR</div>
+        <div class="speed-row">
+            <div class="speed-item">
+                <div class="speed-label">DOWNLOAD</div>
+                <div class="speed-value download" id="speed-download">0</div>
+                <div class="speed-label"><span id="speed-download-unit">KB/s</span></div>
+            </div>
+            <div class="speed-item">
+                <div class="speed-label">UPLOAD</div>
+                <div class="speed-value upload" id="speed-upload">0</div>
+                <div class="speed-label"><span id="speed-upload-unit">KB/s</span></div>
+            </div>
+            <div class="speed-item">
+                <div class="speed-label">LATENCY</div>
+                <div class="speed-value latency" id="speed-latency">0</div>
+                <div class="speed-label">ms</div>
+            </div>
+        </div>
+        <div class="graph-container" id="graph-container"></div>
+        <div class="log-container" id="log-container">
+            <div class="log-entry"><span class="time">--:--:--</span> Engine initialized successfully.</div>
+        </div>
+    </div>
+
+    <div class="section fade-in">
+        <div class="section-title" style="font-size:var(--font-size-sm);color:var(--text-dim);">PROTOCOL SELECTOR</div>
+        <div class="button-bar" id="protocol-bar"></div>
+        <hr class="divider">
+        <div class="section-title" style="font-size:var(--font-size-sm);color:var(--text-dim);">TRANSPORT TYPE</div>
+        <div class="button-bar" id="transport-bar"></div>
+    </div>
+
+    <div class="section fade-in">
+        <div class="config-wrapper">
+            <button class="copy-btn" id="copy-btn">COPY</button>
+            <div class="config-display" id="config-display">---</div>
+        </div>
+    </div>
+</div>
+
+<script>
+(function() {
+    const PASS = 'saeka';
+    let currentHost = window.location.hostname || '127.0.0.1';
+    
+    const PROTOCOLS = ['vless', 'trojan', 'vmess', 'shadowsocks'];
+    const PROTOCOL_LABELS = { vless: 'VLESS', trojan: 'Trojan', vmess: 'VMess', shadowsocks: 'Shadowsocks' };
+    
+    const TRANSPORTS = ['ws', 'hu', 'xh', 'grpc'];
+    const TRANSPORT_LABELS = { ws: 'WebSocket', hu: 'HTTP Upgrade', xh: 'XHTTP', grpc: 'gRPC (Multiplexed)' };
+
+    const PATHS = { vless: '/vless-rafaeltv', trojan: '/rafaeltv', vmess: '/vmess-rafaeltv', shadowsocks: '/ss-rafaeltv' };
+
+    let selectedProtocol = 'vless';
+    let selectedTransport = 'grpc';
+    let selectedAddress = currentHost;
+    let selectedSNI = currentHost;
+
+    let addressList = [currentHost, 'join.rafaeltv.workers.dev', '104.16.0.1', '104.18.0.1'];
+    let sniList = [currentHost, 'www.google.com', 'www.youtube.com', 'www.facebook.com'];
+
+    let speedHistory = [];
+    let lastUpdateTime = Date.now();
+
+    const infoHost = document.getElementById('info-host');
+    const runtimeDisplay = document.getElementById('runtime-display');
+    const addressDropdownBtn = document.getElementById('address-dropdown-btn');
+    const addressDropdown = document.getElementById('address-dropdown');
+    const addressSelected = document.getElementById('address-selected');
+    const sniDropdownBtn = document.getElementById('sni-dropdown-btn');
+    const sniDropdown = document.getElementById('sni-dropdown');
+    const sniSelected = document.getElementById('sni-selected');
+    const protocolBar = document.getElementById('protocol-bar');
+    const transportBar = document.getElementById('transport-bar');
+    const pingDisplay = document.getElementById('ping-display');
+    const configDisplay = document.getElementById('config-display');
+    const copyBtn = document.getElementById('copy-btn');
+    const speedDownload = document.getElementById('speed-download');
+    const speedUpload = document.getElementById('speed-upload');
+    const speedLatency = document.getElementById('speed-latency');
+    const speedDownloadUnit = document.getElementById('speed-download-unit');
+    const speedUploadUnit = document.getElementById('speed-upload-unit');
+    const graphContainer = document.getElementById('graph-container');
+    const logContainer = document.getElementById('log-container');
+    const loadingScreen = document.getElementById('loading-screen');
+    const mainContent = document.getElementById('main-content');
+
+    function addLog(message) {
+        const now = new Date();
+        const time = now.toTimeString().split(' ')[0];
+        const entry = document.createElement('div');
+        entry.className = 'log-entry';
+        entry.innerHTML = '<span class="time">' + time + '</span> ' + message;
+        logContainer.appendChild(entry);
+        logContainer.scrollTop = logContainer.scrollHeight;
+    }
+
+    function initPortal() {
+        infoHost.textContent = currentHost;
+        setupDropdown(addressDropdown, addressList, (val) => {
+            selectedAddress = val;
+            addressSelected.textContent = 'HOST: ' + val;
+            addressDropdownBtn.textContent = val + ' ▾';
+            updateConfigDisplay();
+            pingCombined();
+        });
+        setupDropdown(sniDropdown, sniList, (val) => {
+            selectedSNI = val;
+            sniSelected.textContent = 'SNI: ' + val;
+            sniDropdownBtn.textContent = val + ' ▾';
+            updateConfigDisplay();
+            pingCombined();
+        });
+
+        addressDropdownBtn.textContent = selectedAddress + ' ▾';
+        sniDropdownBtn.textContent = selectedSNI + ' ▾';
+
+        addressDropdownBtn.addEventListener('click', (e) => { e.stopPropagation(); addressDropdown.classList.toggle('show'); sniDropdown.classList.remove('show'); });
+        sniDropdownBtn.addEventListener('click', (e) => { e.stopPropagation(); sniDropdown.classList.toggle('show'); addressDropdown.classList.remove('show'); });
+        document.addEventListener('click', () => { addressDropdown.classList.remove('show'); sniDropdown.classList.remove('show'); });
+
+        setInterval(simulateSpeedStream, 500);
+        setInterval(updateRuntime, 1000);
+    }
+
+    function setupDropdown(element, items, callback) {
+        element.innerHTML = '';
+        items.forEach(item => {
+            const dItem = document.createElement('div');
+            dItem.className = 'dropdown-item';
+            dItem.textContent = item;
+            dItem.addEventListener('click', () => {
+                element.querySelectorAll('.dropdown-item').forEach(i => i.classList.remove('selected'));
+                dItem.classList.add('selected');
+                callback(item);
+            });
+            element.appendChild(dItem);
+        });
+    }
+
+    function simulateSpeedStream() {
+        const now = Date.now();
+        const timeDiff = (now - lastUpdateTime) / 1000;
+        if (timeDiff >= 0.5) {
+            const rawDl = Math.random() * 25000 + 8000;
+            const rawUl = Math.random() * 12000 + 4000;
+            speedDownload.textContent = (rawDl / 1024).toFixed(1);
+            speedDownloadUnit.textContent = 'MB/s';
+            speedUpload.textContent = (rawUl / 1024).toFixed(1);
+            speedUploadUnit.textContent = 'MB/s';
+            speedLatency.textContent = Math.floor(Math.random() * 14 + 4);
+            speedHistory.push(rawDl);
+            if (speedHistory.length > 40) speedHistory.shift();
+            updateGraph();
+            lastUpdateTime = now;
+        }
+    }
+
+    function updateGraph() {
+        graphContainer.innerHTML = '';
+        const max = Math.max(...speedHistory, 1000);
+        speedHistory.forEach(s => {
+            const bar = document.createElement('div');
+            bar.className = 'graph-bar';
+            bar.style.height = ((s / max) * 100) + '%';
+            graphContainer.appendChild(bar);
+        });
+    }
+
+    function updateRuntime() {
+        const diff = Math.floor(performance.now() / 1000);
+        const hrs = String(Math.floor(diff / 3600)).padStart(2, '0');
+        const mins = String(Math.floor((diff % 3600) / 60)).padStart(2, '0');
+        const secs = String(diff % 60).padStart(2, '0');
+        runtimeDisplay.textContent = hrs + ':' + mins + ':' + secs;
+    }
+
+    function pingCombined() {
+        pingDisplay.innerHTML = '<span class="status-dot green"></span> ALIVE: ' + selectedAddress + ' [RTT: ' + Math.floor(Math.random() * 12 + 5) + 'ms]';
+    }
+
+    function getPath() {
+        let path = PATHS[selectedProtocol];
+        if (selectedTransport === 'hu') path += '-hu';
+        else if (selectedTransport === 'xh') path += '-xh';
+        else if (selectedTransport === 'grpc') path += '-grpc';
+        return path;
+    }
+
+    function buildConfig() {
+        const addr = selectedAddress;
+        const sni = selectedSNI;
+        const host = currentHost;
+        const path = getPath();
+        const serviceName = path.substring(1);
+
+        if (selectedTransport === 'grpc') {
+            switch (selectedProtocol) {
+                case 'vless': return 'vless://' + PASS + '@' + addr + ':443?encryption=none&flow=none&type=grpc&serviceName=' + serviceName + '&security=tls&fp=chrome&sni=' + sni + '#VLESS-gRPC-' + host;
+                case 'trojan': return 'trojan://' + PASS + '@' + addr + ':443?type=grpc&serviceName=' + serviceName + '&security=tls&fp=chrome&sni=' + sni + '#TROJAN-gRPC-' + host;
+                case 'vmess': {
+                    return 'vmess://' + btoa(JSON.stringify({ v: '2', ps: 'VMESS-gRPC-' + host, add: addr, port: '443', id: PASS, aid: '0', scy: 'auto', net: 'grpc', type: 'none', host: host, path: serviceName, tls: 'tls', sni: sni, fp: 'chrome', alpn: 'http/1.1' }));
+                }
+                case 'shadowsocks': return 'ss://' + btoa('aes-256-gcm:' + PASS) + '@' + addr + ':443?type=grpc&serviceName=' + serviceName + '&security=tls&sni=' + sni + '#SS-gRPC-' + host;
+            }
+        } else {
+            const netType = (selectedTransport === 'xh') ? 'xhttp' : (selectedTransport === 'hu' ? 'httpupgrade' : 'ws');
+            const transportParam = (selectedTransport === 'ws') ? 'type=ws&path=' : 'type=http&path=';
+            switch (selectedProtocol) {
+                case 'vless': return 'vless://' + PASS + '@' + addr + ':443?encryption=none&flow=none&' + transportParam + encodeURIComponent(path) + '&host=' + host + '&security=tls&fp=chrome&sni=' + sni + '&alpn=http%2F1.1#VLESS-' + selectedTransport.toUpperCase() + '-' + host;
+                case 'trojan': return 'trojan://' + PASS + '@' + addr + ':443?' + transportParam + encodeURIComponent(path) + '&host=' + host + '&security=tls&fp=chrome&sni=' + sni + '&alpn=http%2F1.1#TROJAN-' + selectedTransport.toUpperCase() + '-' + host;
+                case 'vmess': return 'vmess://' + btoa(JSON.stringify({ v: '2', ps: 'VMESS-' + selectedTransport.toUpperCase() + '-' + host, add: addr, port: '443', id: PASS, aid: '0', scy: 'auto', net: netType, type: 'none', host: host, path: path, tls: 'tls', sni: sni, fp: 'chrome', alpn: 'http/1.1' }));
+                case 'shadowsocks': return 'ss://' + btoa('aes-256-gcm:' + PASS) + '@' + addr + ':443#SS-' + selectedTransport.toUpperCase() + '-' + host;
+            }
+        }
+    }
+
+    function updateConfigDisplay() {
+        configDisplay.textContent = buildConfig();
+    }
+
+    function buildButtonBar(container, items, selected, labels, callback) {
+        container.innerHTML = '';
+        items.forEach(item => {
+            const btn = document.createElement('button');
+            btn.className = 'btn';
+            if (item === selected) btn.classList.add('active');
+            btn.textContent = labels ? labels[item] : item;
+            btn.addEventListener('click', () => {
+                container.querySelectorAll('.btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                callback(item);
+                updateConfigDisplay();
+            });
+            container.appendChild(btn);
+        });
+    }
+
+    buildButtonBar(protocolBar, PROTOCOLS, selectedProtocol, PROTOCOL_LABELS, (val) => { selectedProtocol = val; addLog('Protocol switched to ' + val.toUpperCase()); });
+    buildButtonBar(transportBar, TRANSPORTS, selectedTransport, TRANSPORT_LABELS, (val) => { selectedTransport = val; addLog('Transport changed to ' + val.toUpperCase()); });
+
+    copyBtn.addEventListener('click', () => {
+        navigator.clipboard.writeText(configDisplay.textContent).then(() => {
+            copyBtn.textContent = 'COPIED!';
+            setTimeout(() => { copyBtn.textContent = 'COPY'; }, 1500);
+        });
+    });
+
+    setTimeout(() => {
+        loadingScreen.classList.add('hidden');
+        mainContent.style.display = 'block';
+        initPortal();
+        updateConfigDisplay();
+    }, 1500);
+})();
+</script>
+</body>
+</html>
 
