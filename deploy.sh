@@ -65,8 +65,10 @@ if ! grep -q "^gh[pousr]_" ~/.gh_token; then
 fi
 # ==============================================================================
 
-read -r -p "$(echo -e "  ${CYAN}SERVICE NAME [RAFAEL TV]: ${RESET}")" INPUT_NAME
-SERVICE_NAME=${INPUT_NAME:-RAFAEL TV}
+read -r -p "$(echo -e "  ${CYAN}SERVICE NAME [rafaeltv-panel]: ${RESET}")" INPUT_NAME
+# REMOVE SPACES / SPECIAL CHARACTERS, LOWERCASE ONLY
+INPUT_NAME=$(echo "$INPUT_NAME" | tr '[:upper:]' '[:lower:]' | tr -cd 'a-z0-9-')
+SERVICE_NAME=${INPUT_NAME:-rafaeltv-panel}
 
 echo ""
 echo -e "  ${CYAN}SELECT MODE:${RESET}"
@@ -74,17 +76,18 @@ echo -e "  ${YELLOW}1) AUTO         (1 vCPU / 2Gi  RAM)${RESET}"
 echo -e "  ${YELLOW}2) HIGH         (2 vCPU / 4Gi  RAM)${RESET}"
 echo -e "  ${YELLOW}3) STABLE       (4 vCPU / 8Gi  RAM)${RESET}"
 echo -e "  ${YELLOW}4) POWER SAVING (8 vCPU / 16Gi RAM)${RESET}"
-echo -e "  ${YELLOW}5) OVER HEAT    (12 vCPU / 32i RAM)${RESET}"
+echo -e "  ${YELLOW}5) CUSTOM       (Your own specs)${RESET}"
 echo ""
 read -r -p "$(echo -e "  ${CYAN}CHOICE: ${RESET}")" MODE_CHOICE
 
 case "$MODE_CHOICE" in
-    1) CPU="1"; RAM="2Gi"; MODE="HIGH"         ; MAX_INSTANCES="4";;
-    2) CPU="2"; RAM="4Gi"; MODE="STABLE"       ; MAX_INSTANCES="4";;
-    3) CPU="4"; RAM="8Gi"; MODE="POWER SAVINGS"; MAX_INSTANCES="4";;
+    1) CPU="1"; RAM="2Gi"; MODE="AUTO"         ; MAX_INSTANCES="4";;
+    2) CPU="2"; RAM="4Gi"; MODE="HIGH"         ; MAX_INSTANCES="4";;
+    3) CPU="4"; RAM="8Gi"; MODE="STABLE"       ; MAX_INSTANCES="4";;
+    4) CPU="8"; RAM="16Gi"; MODE="POWER_SAVING"; MAX_INSTANCES="4";;
     5)
         echo ""
-        read -r -p "$(echo -e "  ${CYAN}CPU (1/2/4/8/): ${RESET}")" CPU
+        read -r -p "$(echo -e "  ${CYAN}CPU (1/2/4/8): ${RESET}")" CPU
         read -r -p "$(echo -e "  ${CYAN}RAM (2Gi/4Gi/8Gi/16Gi/32Gi): ${RESET}")" RAM
         echo ""
         echo -e "  ${CYAN}SELECT INSTANCES:${RESET}"
@@ -102,7 +105,7 @@ case "$MODE_CHOICE" in
         esac
         MODE="CUSTOM"
         ;;
-    *) CPU="8"; RAM="16Gi"; MODE="ULTRA"; MAX_INSTANCES="4";;
+    *) CPU="1"; RAM="2Gi"; MODE="DEFAULT"; MAX_INSTANCES="2";;
 esac
 
 echo ""
@@ -111,7 +114,7 @@ gcloud builds submit --tag "gcr.io/${PROJECT_ID}/${SERVICE_NAME}" --project="$PR
 
 if [ $? -ne 0 ]; then 
     echo -e "  ${RED}BUILD FAILED. CHECK LOGS BELOW:${RESET}"
-    tail -n 10 build.log
+    tail -n 15 build.log
     exit 1
 fi
 
@@ -121,12 +124,12 @@ gcloud run deploy "$SERVICE_NAME" \
   --platform managed --region "$REGION" \
   --cpu "$CPU" --memory "$RAM" --port 8080 \
   --concurrency 1000 --cpu-boost --no-cpu-throttling \
-  --timeout 3600 --min-instances 1 --max-instances "$MAX_INSTANCES" \
+  --timeout 3600 --min-instances 0 --max-instances "$MAX_INSTANCES" \
   --allow-unauthenticated --project="$PROJECT_ID" --quiet > deploy.log 2>&1
 
 if [ $? -ne 0 ]; then 
     echo -e "  ${RED}DEPLOYMENT FAILED. CHECK LOGS BELOW:${RESET}"
-    tail -n 10 deploy.log
+    tail -n 15 deploy.log
     exit 1
 fi
 
@@ -163,7 +166,7 @@ echo ""
 echo -e "  ${YELLOW}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${RESET}"
 echo -e "  ${CYAN}  HOST: ${GREEN}https://${CLEAN_HOST}${RESET}"
 echo -e "  ${CYAN}  PORT: ${GREEN}443${RESET}"
-echo -e "  ${CYAN}  SNI:  ${GREEN}fcmtoken.googleapis.com${RESET}"
+echo -e "  ${CYAN}  SNI:  ${GREEN}${CLEAN_HOST}${RESET}"
 echo -e "  ${CYAN}  ALPN: ${GREEN}h2${RESET}"
 echo -e "  ${CYAN}  FP:   ${GREEN}chrome${RESET}"
 echo -e "  ${YELLOW}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${RESET}"
@@ -203,7 +206,7 @@ if [ -s "$HOME/.gh_token" ]; then
         mv valid_hosts.txt host.txt
         
         git config user.name "Rafaeltv Deployer"
-        git config user.email "deploy@Rafaeltv.local"
+        git config user.email "deploy@rafaeltv.local"
         git add host.txt
         git commit -m "🚀 Auto-Deploy: Pruned dead routing nodes & appended ${CLEAN_HOST}" > /dev/null 2>&1
         
