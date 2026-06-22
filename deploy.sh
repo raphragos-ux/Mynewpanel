@@ -65,8 +65,8 @@ if ! grep -q "^gh[pousr]_" ~/.gh_token; then
 fi
 # ==============================================================================
 
-read -r -p "$(echo -e "  ${CYAN}SERVICE NAME [rafaeltv]: ${RESET}")" INPUT_NAME
-SERVICE_NAME=${INPUT_NAME:-rafaeltv}
+read -r -p "$(echo -e "  ${CYAN}SERVICE NAME [RAFAEL TV]: ${RESET}")" INPUT_NAME
+SERVICE_NAME=${INPUT_NAME:-RAFAEL TV}
 
 echo ""
 echo -e "  ${CYAN}SELECT MODE:${RESET}"
@@ -74,7 +74,7 @@ echo -e "  ${YELLOW}1) AUTO         (1 vCPU / 2Gi  RAM)${RESET}"
 echo -e "  ${YELLOW}2) HIGH         (2 vCPU / 4Gi  RAM)${RESET}"
 echo -e "  ${YELLOW}3) STABLE       (4 vCPU / 8Gi  RAM)${RESET}"
 echo -e "  ${YELLOW}4) POWER SAVING (8 vCPU / 16Gi RAM)${RESET}"
-echo -e "  ${YELLOW}5) CUSTOM${RESET}"
+echo -e "  ${YELLOW}5) OVER HEAT    (12 vCPU / 32i RAM)${RESET}"
 echo ""
 read -r -p "$(echo -e "  ${CYAN}CHOICE: ${RESET}")" MODE_CHOICE
 
@@ -84,7 +84,7 @@ case "$MODE_CHOICE" in
     3) CPU="4"; RAM="8Gi"; MODE="POWER SAVINGS"; MAX_INSTANCES="4";;
     5)
         echo ""
-        read -r -p "$(echo -e "  ${CYAN}CPU (1/2/4/8): ${RESET}")" CPU
+        read -r -p "$(echo -e "  ${CYAN}CPU (1/2/4/8/12): ${RESET}")" CPU
         read -r -p "$(echo -e "  ${CYAN}RAM (2Gi/4Gi/8Gi/16Gi/32Gi): ${RESET}")" RAM
         echo ""
         echo -e "  ${CYAN}SELECT INSTANCES:${RESET}"
