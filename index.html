@@ -3,22 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>RAFAELTV PANEL</title>
+    <title>RAFAELTV PANEL - Naruto Shippuden</title>
     <style>
         :root {
-            --bg: #0f172a;
-            --surface: #1e293b;
-            --surface2: #334155;
-            --border: #475569;
-            --text: #f8fafc;
-            --text-dim: #94a3b8;
-            --accent: #06b6d4;
-            --glow: #22d3ee;
-            --green: #10b981;
-            --red: #ef4444;
-            --yellow: #f59e0b;
-            --blue: #3b82f6;
-            --purple: #8b5cf6;
+            /* Naruto Shippuden Color Palette */
+            --bg-main: #1a0f07;
+            --bg-dark: #2b160a;
+            --surface: rgba(43, 22, 10, 0.8);
+            --surface2: rgba(66, 33, 15, 0.75);
+            --border: #8b4513;
+            --border-bright: #d2691e;
+            --text: #fef3e2;
+            --text-dim: #d4b89a;
+            --accent: #ff7f00;      /* Naruto Orange */
+            --glow: #ffaa33;
+            --red: #e63946;
+            --yellow: #ffd700;
+            --blue: #4169e1;
+            --purple: #9932cc;
+            --green: #32cd32;
             --font-sans: 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
             --font-mono: 'Consolas', 'Monaco', monospace;
             --font-size-base: clamp(13px, 3.2vw, 16px);
@@ -34,7 +37,12 @@
         }
 
         body {
-            background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
+            /* Naruto Shippuden Background */
+            background: linear-gradient(135deg, #1a0f07 0%, #3b1807 50%, #2c0a05 100%);
+            background-image: url('https://images.unsplash.com/photo-1612487528505-4d03c0955438?auto=format&fit=crop&w=1920&q=80');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
             color: var(--text);
             font-family: var(--font-sans);
             font-size: var(--font-size-base);
@@ -47,6 +55,17 @@
             -webkit-tap-highlight-color: transparent;
             user-select: none;
             padding: 20px 0;
+            position: relative;
+        }
+
+        /* Dark overlay for readability */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(26, 15, 7, 0.75);
+            z-index: -1;
         }
 
         .container {
@@ -64,13 +83,18 @@
         }
 
         @keyframes pulseGlow {
-            0%, 100% { box-shadow: 0 0 10px var(--glow), 0 0 20px rgba(6, 182, 212, 0.2); }
-            50% { box-shadow: 0 0 6px var(--glow), 0 0 12px rgba(6, 182, 212, 0.1); }
+            0%, 100% { box-shadow: 0 0 12px var(--glow), 0 0 25px rgba(255, 127, 0, 0.3); }
+            50% { box-shadow: 0 0 6px var(--glow), 0 0 12px rgba(255, 127, 0, 0.15); }
         }
 
         @keyframes textGlow {
-            0%, 100% { text-shadow: 0 0 10px var(--glow), 0 0 20px rgba(6, 182, 212, 0.4); }
-            50% { text-shadow: 0 0 5px var(--glow), 0 0 10px rgba(6, 182, 212, 0.2); }
+            0%, 100% { text-shadow: 0 0 12px var(--glow), 0 0 22px rgba(255, 127, 0, 0.5); }
+            50% { text-shadow: 0 0 6px var(--glow), 0 0 12px rgba(255, 127, 0, 0.25); }
+        }
+
+        @keyframes sealPulse {
+            0%,100% { transform: scale(1); }
+            50% { transform: scale(1.03); }
         }
 
         .fade-in { animation: fadeInUp 0.6s ease-out forwards; }
@@ -86,7 +110,7 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            background: rgba(15, 23, 42, 0.95);
+            background: rgba(26, 15, 7, 0.95);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
             z-index: 9999;
@@ -128,18 +152,20 @@
         }
 
         .section {
-            background: rgba(30, 41, 59, 0.75);
-            border: 1px solid rgba(71, 85, 105, 0.5);
+            background: var(--surface);
+            border: 1px solid var(--border);
             border-radius: 16px;
             padding: 20px;
             width: 100%;
             transition: all 0.3s ease;
             backdrop-filter: blur(10px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
         }
 
         .section:hover {
-            border-color: rgba(6, 182, 212, 0.4);
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            border-color: var(--border-bright);
+            box-shadow: 0 4px 25px rgba(255, 127, 0, 0.2);
+            animation: sealPulse 4s ease-in-out infinite;
         }
 
         .section-title {
@@ -168,7 +194,7 @@
         }
 
         .btn {
-            background: rgba(51, 65, 85, 0.6);
+            background: var(--surface2);
             border: 1px solid var(--border);
             color: var(--text);
             padding: 9px 16px;
@@ -182,14 +208,14 @@
 
         .btn:hover {
             border-color: var(--accent);
-            background: rgba(6, 182, 212, 0.12);
+            background: rgba(255, 127, 0, 0.15);
             transform: translateY(-1px);
         }
 
         .btn.active {
             border-color: var(--accent);
-            background: rgba(6, 182, 212, 0.2);
-            box-shadow: 0 0 12px rgba(6, 182, 212, 0.3);
+            background: rgba(255, 127, 0, 0.25);
+            box-shadow: 0 0 12px rgba(255, 127, 0, 0.35);
             font-weight: 600;
             color: #ffffff;
         }
@@ -201,7 +227,8 @@
             margin-top: 12px;
             padding: 8px;
             border-radius: 8px;
-            background: rgba(15, 23, 42, 0.4);
+            background: rgba(26, 15, 7, 0.5);
+            border: 1px solid rgba(139, 69, 19, 0.4);
         }
 
         .speed-row {
@@ -217,7 +244,8 @@
             flex: 1;
             padding: 12px;
             border-radius: 12px;
-            background: rgba(15, 23, 42, 0.4);
+            background: rgba(26, 15, 7, 0.5);
+            border: 1px solid rgba(139, 69, 19, 0.4);
         }
 
         .speed-label {
@@ -242,17 +270,18 @@
             height: 70px;
             margin-top: 16px;
             padding: 8px;
-            background: rgba(15, 23, 42, 0.5);
+            background: rgba(26, 15, 7, 0.6);
             border-radius: 8px;
+            border: 1px solid rgba(139, 69, 19, 0.4);
         }
 
         .graph-bar {
             flex: 1;
-            background: linear-gradient(to top, var(--accent), var(--purple));
+            background: linear-gradient(to top, var(--accent), var(--red));
             border-radius: 3px;
             transition: height 0.12s ease;
             min-height: 3px;
-            opacity: 0.85;
+            opacity: 0.9;
         }
 
         .config-wrapper {
@@ -260,7 +289,7 @@
         }
 
         .config-display {
-            background: rgba(15, 23, 42, 0.7);
+            background: rgba(26, 15, 7, 0.75);
             border: 1px solid var(--border);
             border-radius: 12px;
             padding: 16px;
@@ -280,7 +309,7 @@
             position: absolute;
             top: 12px;
             right: 16px;
-            background: rgba(51, 65, 85, 0.8);
+            background: var(--surface2);
             border: 1px solid var(--border);
             color: var(--text);
             padding: 6px 14px;
@@ -295,7 +324,7 @@
 
         .copy-btn:hover {
             border-color: var(--accent);
-            background: rgba(6, 182, 212, 0.2);
+            background: rgba(255, 127, 0, 0.2);
         }
 
         .status-dot {
@@ -310,7 +339,7 @@
         .status-dot.yellow { background: var(--yellow); box-shadow: 0 0 8px var(--yellow); animation: pulse 1.2s infinite; }
         @keyframes pulse { 0%,100% {opacity:1;} 50% {opacity:0.5;} }
 
-        .divider { border: none; border-top: 1px solid rgba(71, 85, 105, 0.6); margin: 12px 0; }
+        .divider { border: none; border-top: 1px solid rgba(139, 69, 19, 0.6); margin: 12px 0; }
         .info-row { display: flex; justify-content: space-between; align-items: center; padding: 6px 0; font-size: var(--font-size-sm); }
         .info-label { color: var(--text-dim); }
         .info-value { color: var(--accent); font-weight: 600; }
@@ -319,7 +348,7 @@
         .dropdown-content {
             display: none;
             position: fixed;
-            background: rgba(30, 41, 59, 0.95);
+            background: rgba(43, 22, 10, 0.95);
             border: 1px solid var(--border);
             border-radius: 10px;
             padding: 6px 0;
@@ -333,11 +362,11 @@
         }
         .dropdown-content.show { display: block; }
         .dropdown-item { padding: 10px 14px; cursor: pointer; font-size: var(--font-size-sm); color: var(--text); transition: background 0.2s; }
-        .dropdown-item:hover { background: rgba(6, 182, 212, 0.15); }
-        .dropdown-item.selected { color: var(--accent); font-weight: bold; background: rgba(6, 182, 212, 0.1); }
+        .dropdown-item:hover { background: rgba(255, 127, 0, 0.18); }
+        .dropdown-item.selected { color: var(--accent); font-weight: bold; background: rgba(255, 127, 0, 0.12); }
 
         .log-container {
-            background: rgba(15, 23, 42, 0.8);
+            background: rgba(26, 15, 7, 0.85);
             border: 1px solid var(--border);
             border-radius: 10px;
             padding: 12px;
@@ -348,22 +377,22 @@
             margin-top: 12px;
         }
         .log-entry { padding: 3px 0; font-family: var(--font-mono); }
-        .log-entry .time { color: #64748b; margin-right: 8px; }
+        .log-entry .time { color: #b89470; margin-right: 8px; }
     </style>
 </head>
 <body>
 
 <div id="loading-screen">
     <div class="loading-digits" id="loading-digits">
-        <span id="d4">4</span><span id="d0">0</span><span id="d4b">4</span>
+        <span id="d4">★</span><span id="d0">N</span><span id="d4b">★</span>
     </div>
-    <div class="loading-subtitle" id="loading-subtitle">INITIALIZING CONFIG PORTAL</div>
+    <div class="loading-subtitle" id="loading-subtitle">INITIALIZING SHINOBI PORTAL</div>
 </div>
 
 <div class="container" id="main-content" style="display:none;">
     <div class="section fade-in">
         <div class="section-title glow-text" style="font-size:var(--font-size-xl); letter-spacing:3px;">RAFAELTV PANEL</div>
-        <div class="section-subtitle">RAFAEL TV LIBRENG INTERTNET</div>
+        <div class="section-subtitle">NARUTO SHIPPUDEN • LIBRENG INTERNET</div>
         <hr class="divider">
         <div class="info-row"><span class="info-label">HOST:</span><span class="info-value" id="info-host">---</span></div>
         <div class="info-row"><span class="info-label">PASS / UUID:</span><span class="info-value">rafaeltv</span></div>
@@ -412,7 +441,7 @@
         </div>
         <div class="graph-container" id="graph-container"></div>
         <div class="log-container" id="log-container">
-            <div class="log-entry"><span class="time">--:--:--</span> Engine initialized successfully.</div>
+            <div class="log-entry"><span class="time">--:--:--</span> Shinobi network initialized successfully.</div>
         </div>
     </div>
 
@@ -650,4 +679,3 @@
 </script>
 </body>
 </html>
-
