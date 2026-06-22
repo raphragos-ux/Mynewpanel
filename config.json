@@ -1,1 +1,166 @@
-
+{
+  "log": {
+    "loglevel": "none"
+  },
+  "dns": {
+    "servers": ["8.8.8.8", "1.1.1.1"],
+    "queryStrategy": "UseIPv4",
+    "disableCache": false,
+    "hosts": {
+      "pagead2.googlesyndication.com": "127.0.0.1",
+      "googlesyndication.com": "127.0.0.1",
+      "doubleclick.net": "127.0.0.1",
+      "googleadservices.com": "127.0.0.1",
+      "adservice.google.com": "127.0.0.1",
+      "adsbygoogle.com": "127.0.0.1",
+      "google-analytics.com": "127.0.0.1",
+      "googletagmanager.com": "127.0.0.1",
+      "googletagservices.com": "127.0.0.1",
+      "googleads.g.doubleclick.net": "127.0.0.1",
+      "securepubads.g.doubleclick.net": "127.0.0.1",
+      "tpc.googlesyndication.com": "127.0.0.1",
+      "afs.googlesyndication.com": "127.0.0.1",
+      "stats.g.doubleclick.net": "127.0.0.1",
+      "ad.doubleclick.net": "127.0.0.1",
+      "partner.googleadservices.com": "127.0.0.1",
+      "pagead2.googleadservices.com": "127.0.0.1",
+      "youtube.com": "127.0.0.1",
+      "ytimg.com": "127.0.0.1",
+      "googlevideo.com": "127.0.0.1",
+      "youtube-nocookie.com": "127.0.0.1",
+      "yt3.ggpht.com": "127.0.0.1",
+      "i.ytimg.com": "127.0.0.1",
+      "s.ytimg.com": "127.0.0.1",
+      "popads.net": "127.0.0.1",
+      "popcash.net": "127.0.0.1",
+      "propellerads.com": "127.0.0.1",
+      "adcash.com": "127.0.0.1",
+      "exoclick.com": "127.0.0.1",
+      "adsterra.com": "127.0.0.1",
+      "popmyads.com": "127.0.0.1",
+      "adultforce.com": "127.0.0.1",
+      "trafficjunky.com": "127.0.0.1",
+      "clickaine.com": "127.0.0.1",
+      "ad-maven.com": "127.0.0.1",
+      "adpushup.com": "127.0.0.1",
+      "adrecover.com": "127.0.0.1",
+      "blockadblock.com": "127.0.0.1",
+      "admiral.com": "127.0.0.1",
+      "fundingchoices.google.com": "127.0.0.1"
+    }
+  },
+  "inbounds": [
+    {
+      "port": 10000, "listen": "127.0.0.1", "protocol": "trojan", "tag": "trojan-ws",
+      "settings": {"clients": [{"password": "rafaeltv"}]},
+      "streamSettings": {"network": "ws", "wsSettings": {"path": "/rafaeltv"}, "sockopt": {"tcpFastOpen": true, "tcpNoDelay": true, "tcpKeepAliveInterval": 15}},
+      "sniffing": {"enabled": true, "destOverride": ["http", "tls"]}
+    },
+    {
+      "port": 10001, "listen": "127.0.0.1", "protocol": "trojan", "tag": "trojan-hu",
+      "settings": {"clients": [{"password": "rafaeltv"}]},
+      "streamSettings": {"network": "httpupgrade", "httpupgradeSettings": {"path": "/rafaeltv-hu"}, "sockopt": {"tcpFastOpen": true, "tcpNoDelay": true, "tcpKeepAliveInterval": 15}},
+      "sniffing": {"enabled": true, "destOverride": ["http", "tls"]}
+    },
+    {
+      "port": 10002, "listen": "127.0.0.1", "protocol": "trojan", "tag": "trojan-xh",
+      "settings": {"clients": [{"password": "rafaeltv"}]},
+      "streamSettings": {"network": "xhttp", "xhttpSettings": {"path": "/rafaeltv-xh", "mode": "auto"}, "sockopt": {"tcpFastOpen": true, "tcpNoDelay": true, "tcpKeepAliveInterval": 15}},
+      "sniffing": {"enabled": true, "destOverride": ["http", "tls"]}
+    },
+    {
+      "port": 10012, "listen": "127.0.0.1", "protocol": "trojan", "tag": "trojan-grpc",
+      "settings": {"clients": [{"password": "rafaeltv"}]},
+      "streamSettings": {"network": "grpc", "grpcSettings": {"serviceName": "rafaeltv-grpc"}, "sockopt": {"tcpFastOpen": true, "tcpNoDelay": true, "tcpKeepAliveInterval": 15}},
+      "sniffing": {"enabled": true, "destOverride": ["http", "tls"]}
+    },
+    {
+      "port": 10003, "listen": "127.0.0.1", "protocol": "vmess", "tag": "vmess-ws",
+      "settings": {"clients": [{"id": "rafaeltv", "alterId": 0}]},
+      "streamSettings": {"network": "ws", "wsSettings": {"path": "/vmess-rafaeltv"}, "sockopt": {"tcpFastOpen": true, "tcpNoDelay": true, "tcpKeepAliveInterval": 15}},
+      "sniffing": {"enabled": true, "destOverride": ["http", "tls"]}
+    },
+    {
+      "port": 10004, "listen": "127.0.0.1", "protocol": "vmess", "tag": "vmess-hu",
+      "settings": {"clients": [{"id": "rafaeltv", "alterId": 0}]},
+      "streamSettings": {"network": "httpupgrade", "httpupgradeSettings": {"path": "/vmess-rafaeltv-hu"}, "sockopt": {"tcpFastOpen": true, "tcpNoDelay": true, "tcpKeepAliveInterval": 15}},
+      "sniffing": {"enabled": true, "destOverride": ["http", "tls"]}
+    },
+    {
+      "port": 10005, "listen": "127.0.0.1", "protocol": "vmess", "tag": "vmess-xh",
+      "settings": {"clients": [{"id": "rafaeltv", "alterId": 0}]},
+      "streamSettings": {"network": "xhttp", "xhttpSettings": {"path": "/vmess-rafaeltv-xh", "mode": "auto"}, "sockopt": {"tcpFastOpen": true, "tcpNoDelay": true, "tcpKeepAliveInterval": 15}},
+      "sniffing": {"enabled": true, "destOverride": ["http", "tls"]}
+    },
+    {
+      "port": 10013, "listen": "127.0.0.1", "protocol": "vmess", "tag": "vmess-grpc",
+      "settings": {"clients": [{"id": "rafaeltv", "alterId": 0}]},
+      "streamSettings": {"network": "grpc", "grpcSettings": {"serviceName": "vmess-rafaeltv-grpc"}, "sockopt": {"tcpFastOpen": true, "tcpNoDelay": true, "tcpKeepAliveInterval": 15}},
+      "sniffing": {"enabled": true, "destOverride": ["http", "tls"]}
+    },
+    {
+      "port": 10006, "listen": "127.0.0.1", "protocol": "vless", "tag": "vless-ws",
+      "settings": {"clients": [{"id": "rafaeltv"}], "decryption": "none"},
+      "streamSettings": {"network": "ws", "wsSettings": {"path": "/vless-rafaeltv"}, "sockopt": {"tcpFastOpen": true, "tcpNoDelay": true, "tcpKeepAliveInterval": 15}},
+      "sniffing": {"enabled": true, "destOverride": ["http", "tls"]}
+    },
+    {
+      "port": 10007, "listen": "127.0.0.1", "protocol": "vless", "tag": "vless-hu",
+      "settings": {"clients": [{"id": "rafaeltv"}], "decryption": "none"},
+      "streamSettings": {"network": "httpupgrade", "httpupgradeSettings": {"path": "/vless-rafaeltv-hu"}, "sockopt": {"tcpFastOpen": true, "tcpNoDelay": true, "tcpKeepAliveInterval": 15}},
+      "sniffing": {"enabled": true, "destOverride": ["http", "tls"]}
+    },
+    {
+      "port": 10008, "listen": "127.0.0.1", "protocol": "vless", "tag": "vless-xh",
+      "settings": {"clients": [{"id": "rafaeltv"}], "decryption": "none"},
+      "streamSettings": {"network": "xhttp", "xhttpSettings": {"path": "/vless-rafaeltv-xh", "mode": "auto"}, "sockopt": {"tcpFastOpen": true, "tcpNoDelay": true, "tcpKeepAliveInterval": 15}},
+      "sniffing": {"enabled": true, "destOverride": ["http", "tls"]}
+    },
+    {
+      "port": 10014, "listen": "127.0.0.1", "protocol": "vless", "tag": "vless-grpc",
+      "settings": {"clients": [{"id": "rafaeltv"}], "decryption": "none"},
+      "streamSettings": {"network": "grpc", "grpcSettings": {"serviceName": "vless-rafaeltv-grpc"}, "sockopt": {"tcpFastOpen": true, "tcpNoDelay": true, "tcpKeepAliveInterval": 15}},
+      "sniffing": {"enabled": true, "destOverride": ["http", "tls"]}
+    },
+    {
+      "port": 10009, "listen": "127.0.0.1", "protocol": "shadowsocks", "tag": "ss-ws",
+      "settings": {"clients": [{"password": "rafaeltv", "method": "aes-256-gcm"}]},
+      "streamSettings": {"network": "ws", "wsSettings": {"path": "/ss-rafaeltv"}, "sockopt": {"tcpFastOpen": true, "tcpNoDelay": true, "tcpKeepAliveInterval": 15}}
+    },
+    {
+      "port": 10010, "listen": "127.0.0.1", "protocol": "shadowsocks", "tag": "ss-hu",
+      "settings": {"clients": [{"password": "rafaeltv", "method": "aes-256-gcm"}]},
+      "streamSettings": {"network": "httpupgrade", "httpupgradeSettings": {"path": "/ss-rafaeltv-hu"}, "sockopt": {"tcpFastOpen": true, "tcpNoDelay": true, "tcpKeepAliveInterval": 15}}
+    },
+    {
+      "port": 10011, "listen": "127.0.0.1", "protocol": "shadowsocks", "tag": "ss-xh",
+      "settings": {"clients": [{"password": "rafaeltv", "method": "aes-256-gcm"}]},
+      "streamSettings": {"network": "xhttp", "xhttpSettings": {"path": "/ss-rafaeltv-xh", "mode": "auto"}, "sockopt": {"tcpFastOpen": true, "tcpNoDelay": true, "tcpKeepAliveInterval": 15}}
+    },
+    {
+      "port": 10015, "listen": "127.0.0.1", "protocol": "shadowsocks", "tag": "ss-grpc",
+      "settings": {"clients": [{"password": "rafaeltv", "method": "aes-256-gcm"}]},
+      "streamSettings": {"network": "grpc", "grpcSettings": {"serviceName": "ss-rafaetv-grpc"}, "sockopt": {"tcpFastOpen": true, "tcpNoDelay": true, "tcpKeepAliveInterval": 15}}
+    }
+  ],
+  "outbounds": [
+    {
+      "protocol": "freedom",
+      "tag": "direct"
+    },
+    {
+      "protocol": "blackhole",
+      "tag": "block"
+    }
+  ],
+  "routing": {
+    "domainStrategy": "AsIs",
+    "rules": [
+      {
+        "type": "field",
+        "inboundTag": ["trojan-ws", "trojan-hu", "trojan-xh", "trojan-grpc", "vmess-ws", "vmess-hu", "vmess-xh", "vmess-grpc", "vless-ws", "vless-hu", "vless-xh", "vless-grpc", "ss-ws", "ss-hu", "ss-xh", "ss-grpc"],
+        "outboundTag": "direct"
+      }
+    ]
+  }
+}
