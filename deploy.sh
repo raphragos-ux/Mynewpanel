@@ -84,7 +84,7 @@ case "$MODE_CHOICE" in
     3) CPU="4"; RAM="8Gi"; MODE="POWER SAVINGS"; MAX_INSTANCES="4";;
     5)
         echo ""
-        read -r -p "$(echo -e "  ${CYAN}CPU (1/2/4/8/12): ${RESET}")" CPU
+        read -r -p "$(echo -e "  ${CYAN}CPU (1/2/4/8/): ${RESET}")" CPU
         read -r -p "$(echo -e "  ${CYAN}RAM (2Gi/4Gi/8Gi/16Gi/32Gi): ${RESET}")" RAM
         echo ""
         echo -e "  ${CYAN}SELECT INSTANCES:${RESET}"
